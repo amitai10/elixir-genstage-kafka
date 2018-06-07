@@ -18,12 +18,12 @@ defmodule GenstageExample.Producer do
   end
   def handle_call({:notify, message_set}, from, %{demand: demand} = state) when length(message_set) > demand do
     {to_dispatch, remaining} = Enum.split(message_set, demand)
-    to_dispatch = Enum.map(to_dispatch, &"#{&1.value}, demand: #{demand}")
+    to_dispatch = Enum.map(to_dispatch, &extrac_val/1)
     new_state = %{state | message_set: remaining, from: from, demand: demand - length(to_dispatch)}
     {:noreply, to_dispatch, new_state}
   end
   def handle_call({:notify, message_set}, from, %{demand: demand} = state) do
-    to_dispatch = Enum.map(message_set, &"#{&1.value}, demand: #{demand}")
+    to_dispatch = Enum.map(message_set, &extrac_val/1)
     new_state = %{state | demand: demand - length(to_dispatch), from: from}
     {:reply, :ok, to_dispatch, new_state}
   end
@@ -38,16 +38,20 @@ defmodule GenstageExample.Producer do
   end
   def handle_demand(demand, %{message_set: message_set} = state) when demand > 0 and length(message_set) > demand do
     {to_dispatch, remaining} = Enum.split(message_set, demand)
-    to_dispatch = Enum.map(to_dispatch, &"#{&1.value}, demand: #{demand}")
+    to_dispatch = Enum.map(to_dispatch, &extrac_val/1)
     {:noreply, to_dispatch, %{state | message_set: remaining, demand: 0}}
   end
   def handle_demand(demand, %{message_set: message_set} = state) when demand > 0 do
-    to_dispatch = Enum.map(message_set, &"#{&1.value}, demand: #{demand}")
+    to_dispatch = Enum.map(message_set, &extrac_val/1)
     new_state = %{state | message_set: [], demand: demand - length(to_dispatch)}
     GenStage.reply(state.from, :ok)
     {:noreply, to_dispatch, new_state}
   end
   def handle_demand(demand, state) do
     {:noreply, [], state}
+  end
+
+  defp extrac_val(msg) do
+    msg.value
   end
 end

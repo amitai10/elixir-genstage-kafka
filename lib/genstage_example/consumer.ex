@@ -1,6 +1,7 @@
 defmodule GenstageExample.Consumer do
   use GenStage
-
+  
+  require IEx
   require Logger
 
   def start_link do
@@ -12,7 +13,9 @@ defmodule GenstageExample.Consumer do
   end
 
   def handle_events(events, _from, state) do
-    Logger.debug("consumer #{inspect(events)}")
+    e_j = events 
+    |> Enum.map(fn(e) -> Poison.decode!(e) end)
+    Logger.debug("consumer #{inspect(e_j)}")
     Process.sleep(1000)
     {:noreply, [], state}
   end

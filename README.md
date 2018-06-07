@@ -1,21 +1,14 @@
-# Kafka
+# Get Kafka messages with KafkaEx and GenStage
 
-**TODO: Add description**
+## based on this lecture: https://www.youtube.com/watch?v=6ijgMvXJyuo
 
-## Installation
+[Kafka](http://kafka.apache.org) is a distributed streaming platform.
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `kafka` to your list of dependencies in `mix.exs`:
+I use [KafkaEx](https://github.com/kafkaex/kafka_ex) to recieve messages from it.
 
-```elixir
-def deps do
-  [
-    {:kafka, "~> 0.1.0"}
-  ]
-end
-```
+Then I pass it to a GenStage producer that delivers it to GenStage Consumer.
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/kafka](https://hexdocs.pm/kafka).
+This way it allows me to get the benefit of GenStage for back-pressure.
+
+
 

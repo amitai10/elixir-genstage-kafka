@@ -8,14 +8,12 @@ defmodule GenstageExample.Consumer do
   end
 
   def init(state) do
-    {:consumer, nil, subscribe_to: [{GenstageExample.Producer, max_demand: 1}]}
+    {:consumer, nil, subscribe_to: [{GenstageExample.Producer, max_demand: 2}]}
   end
 
   def handle_events(events, _from, state) do
-    Logger.debug("+++++++++++++++++++++++")
-    
     Logger.debug("consumer #{inspect(events)}")
-    Process.sleep(3000)
+    Process.sleep(1000)
     {:noreply, [], state}
   end
 end
